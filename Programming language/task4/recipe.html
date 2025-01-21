@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Finder</title>
+  <style>
+    /* General Styling */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    h1 {
+      background-color: #ff6f61;
+      color: white;
+      padding: 10px 0;
+      margin-bottom: 20px;
+    }
+
+    /* Search and Filter Section */
+    .search-section {
+      margin: 20px auto;
+      max-width: 600px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #e2544c;
+    }
+
+    /* Recipe Card Section */
+    #recipes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .recipe-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      text-align: left;
+      transition: transform 0.3s;
+    }
+
+    .recipe-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .recipe-card h3 {
+      margin: 0 0 10px;
+      color: #ff6f61;
+      font-size: 18px;
+    }
+
+    .recipe-card p {
+      margin: 5px 0;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Recipe Finder</h1>
+
+  <!-- Search and Filter Section -->
+  <div class="search-section">
+    <input id="ingredientInput" type="text" placeholder="Type ingredients (e.g., Tomato, Cheese)" />
+    <select id="typeFilter">
+      <option value="">All Types</option>
+      <option value="Breakfast">Breakfast</option>
+      <option value="Lunch">Lunch</option>
+      <option value="Dinner">Dinner</option>
+      <option value="Snack">Snack</option>
+    </select>
+    <button onclick="searchRecipes()">Search</button>
+  </div>
+
+  <!-- Recipe Cards Section -->
+  <div id="recipes"></div>
+
+  <script>
+    // Sample Recipe Data
+    const recipes = [
+      {
+        title: "Tomato Cheese Sandwich",
+        ingredients: ["Tomato", "Cheese", "Bread"],
+        type: "Breakfast",
+        description: "A quick and easy tomato cheese sandwich for your breakfast."
+      },
+      {
+        title: "Grilled Chicken Salad",
+        ingredients: ["Chicken", "Lettuce", "Tomato"],
+        type: "Lunch",
+        description: "A healthy grilled chicken salad with fresh lettuce and tomato."
+      },
+      {
+        title: "Vegetable Stir-Fry",
+        ingredients: ["Broccoli", "Carrot", "Soy Sauce"],
+        type: "Dinner",
+        description: "A flavorful vegetable stir-fry with a hint of soy sauce."
+      },
+      {
+        title: "Banana Pancakes",
+        ingredients: ["Banana", "Egg", "Flour"],
+        type: "Breakfast",
+        description: "Fluffy banana pancakes to start your morning."
+      },
+      {
+        title: "Cheese Nachos",
+        ingredients: ["Cheese", "Tortilla Chips", "Jalapeno"],
+        type: "Snack",
+        description: "Crunchy tortilla chips topped with melted cheese and jalapeños."
+      }
+    ];
+
+    // Function to Search Recipes
+    function searchRecipes() {
+      const ingredientInput = document.getElementById("ingredientInput").value.toLowerCase();
+      const typeFilter = document.getElementById("typeFilter").value;
+      const recipeContainer = document.getElementById("recipes");
+
+      // Clear the container
+      recipeContainer.innerHTML = "";
+
+      // Filter Recipes
+      const filteredRecipes = recipes.filter(recipe => {
+        const matchesIngredients = ingredientInput.split(",").every(ingredient => 
+          recipe.ingredients.join(",").toLowerCase().includes(ingredient.trim())
+        );
+        const matchesType = typeFilter === "" || recipe.type === typeFilter;
+
+        return matchesIngredients && matchesType;
+      });
+
+      // Display Recipes
+      if (filteredRecipes.length > 0) {
+        filteredRecipes.forEach(recipe => {
+          const recipeCard = document.createElement("div");
+          recipeCard.className = "recipe-card";
+
+          recipeCard.innerHTML = `
+            <h3>${recipe.title}</h3>
+            <p><strong>Type:</strong> ${recipe.type}</p>
+            <p><strong>Ingredients:</strong> ${recipe.ingredients.join(", ")}</p>
+            <p>${recipe.description}</p>
+          `;
+
+          recipeContainer.appendChild(recipeCard);
+        });
+      } else {
+        recipeContainer.innerHTML = "<p>No recipes found. Try different ingredients or types!</p>";
+      }
+    }
+  </script>
+</body>
+</html>
